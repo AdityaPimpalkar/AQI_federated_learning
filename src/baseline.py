@@ -5,6 +5,8 @@ import xgboost
 davitt_road = pd.read_csv('../data/davitt_road/davitt_road_2022.csv')
 
 from sklearn.ensemble import RandomForestRegressor
+from sklearn.svm import SVR
+from sklearn.multioutput import MultiOutputRegressor
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
@@ -43,5 +45,17 @@ mae = mean_absolute_error(y_test, xgb_pred)
 print("XGBoost MSE:", mse)
 print("XGBoost MAE:", mae)
 
+print("---------------------------------")
+svr = SVR()
+mor = MultiOutputRegressor(svr)
+mor.fit(X_train, y_train)
+
+svr_pred = mor.predict(X_test)
+
+mse = mean_squared_error(y_test, svr_pred)
+mae = mean_absolute_error(y_test, svr_pred)
+
+print("SVR MSE:", mse)
+print("SVR MAE:", mae)
 
 
