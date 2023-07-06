@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import xgboost
 
-davitt_road = pd.read_csv('../data/davitt_road/davitt_road_2022.csv')
+dublin_port = pd.read_csv('../data/dublin_port/dublin_port.csv')
 
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.svm import SVR
@@ -12,10 +12,10 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error, mean_absolute_error
 
 std_scl = StandardScaler()
-data = davitt_road[['month', 'day', 'hour']]
+data = dublin_port[['rain', 'temp', 'wetb', 'dewpt', 'vappr', 'rhum', 'msl', 'pm10']]
 
 features = std_scl.fit_transform(data)
-target = davitt_road[['pm10', 'pm2.5']]
+target = dublin_port[['pm2.5']]
 
 X_train, X_test, y_train, y_test = train_test_split(features, target, test_size=0.2, random_state=42)
 
@@ -47,10 +47,10 @@ print("XGBoost MAE:", mae)
 
 print("---------------------------------")
 svr = SVR()
-mor = MultiOutputRegressor(svr)
-mor.fit(X_train, y_train)
+#mor = MultiOutputRegressor(svr)
+svr.fit(X_train, y_train)
 
-svr_pred = mor.predict(X_test)
+svr_pred = svr.predict(X_test)
 
 mse = mean_squared_error(y_test, svr_pred)
 mae = mean_absolute_error(y_test, svr_pred)
